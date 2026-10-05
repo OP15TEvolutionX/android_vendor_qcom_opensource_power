@@ -7,6 +7,19 @@
 -->
 <HintConfigs>
     <Powerhint>
+        <!-- Fairlady battery saver: cap active CPU work at ~2611/3398 MHz.
+             These are conservative starting limits, not measured optimal values.
+             Frequency resources use integer MHz (rounded up to keep the frequency bin);
+             perf HAL arbitrates with thermal limits.
+             No minimum-frequency or CPU-online vote is raised. -->
+        <Config Id="0x00001205" Enable="true" Target="canoe" Timeout="0"
+                Resources="0x40804000, 2612, 0x40804200, 3399" />
+        <!-- Android DEVICE_IDLE is independent of display/AOD doze. Use a
+             separate lock type so leaving Battery Saver cannot undo idle.
+             Same initial ceilings avoid over-throttling maintenance work. -->
+        <Config Id="0x00001205" Type="1" Enable="true" Target="canoe" Timeout="0"
+                Resources="0x40804000, 2612, 0x40804200, 3399" />
+
         <!--video encode 30 fps-->
         <Config
             Id="0x00001203" Enable="true" Target="canoe,alor,alor_interposer"

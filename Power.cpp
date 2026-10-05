@@ -110,6 +110,14 @@ ndk::ScopedAStatus Power::setMode(Mode type, bool enabled) {
 #endif
         case Mode::LOW_POWER:
         case Mode::DEVICE_IDLE:
+#ifdef POWER_SAVING_MODES
+            if (!(type == Mode::LOW_POWER ? mPowerSavingModes.setLowPower(enabled)
+                                         : mPowerSavingModes.setDeviceIdle(enabled))) {
+                LOG(ERROR) << "Failed to acquire power saving lock for " << toString(type);
+                return ndk::ScopedAStatus::fromServiceSpecificError(-1);
+            }
+            break;
+#endif
         case Mode::DISPLAY_INACTIVE:
         case Mode::AUDIO_STREAMING_LOW_LATENCY:
         case Mode::CAMERA_STREAMING_SECURE:
@@ -156,6 +164,10 @@ ndk::ScopedAStatus Power::isModeSupported(Mode type, bool* _aidl_return) {
             break;
 #ifdef TAP_TO_WAKE_NODE
         case Mode::DOUBLE_TAP_TO_WAKE:
+#endif
+#ifdef POWER_SAVING_MODES
+        case Mode::LOW_POWER:
+        case Mode::DEVICE_IDLE:
 #endif
         case Mode::LAUNCH:
         case Mode::INTERACTIVE:
