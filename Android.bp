@@ -24,6 +24,9 @@ cc_binary {
     ] + select(soong_config_variable("qtipower", "interaction_boost"), {
         true: ["-DINTERACTION_BOOST"],
         default: [],
+    }) + select(soong_config_variable("qtipower", "power_saving_modes"), {
+        true: ["-DPOWER_SAVING_MODES"],
+        default: [],
     }) + select(soong_config_variable("qtipower", "mode_ext_lib"), {
         any @ lib: ["-DMODE_EXT"],
         default: [],

@@ -33,6 +33,10 @@
 #include <aidl/android/hardware/power/BnPower.h>
 #include "aidl/android/hardware/power/SessionTag.h"
 #include "power-common.h"
+#ifdef POWER_SAVING_MODES
+#include "PowerSavingModes.h"
+#include "utils.h"
+#endif
 
 namespace aidl {
 namespace android {
@@ -41,6 +45,10 @@ namespace power {
 namespace impl {
 
 class Power : public BnPower {
+#ifdef POWER_SAVING_MODES
+  private:
+    PowerSavingModes mPowerSavingModes{perf_hint_enable_with_type, release_request};
+#endif
   public:
     Power() : BnPower() { power_init(); }
     ndk::ScopedAStatus setMode(Mode type, bool enabled) override;
